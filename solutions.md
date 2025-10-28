@@ -67,7 +67,7 @@ Determine whether the answer for test01.SWE is YES or NO and justify your soluti
 - For the answer to be YES, all of the expansions must be substrings of `abdde`. 
 - For the answer to be NO, at least one expansion must not be a substring of `abdde`.
 
-Analyze the expansions of each string $t_i$:
+Analyze the expansions of each string $ t_i $:
 1. For $t_1 = ABD$, valid expansions are:
    - `a` + `b` + `d` = `abd`
    - `a` + `b` + `dd` = `abdd`
@@ -99,7 +99,21 @@ Analyze the expansions of each string $t_i$:
 ### c) Formal Language Description
 Describe the formal language that we use in the .SWE file format to represent inputs to SuperStringWithExpansion and describe how to solve the word problem for a word over the underlying alphabet. Note that every formal language is defined over a single alphabet only.
 
-$$\Pi_{file}​=\{0,…,9,a,…,z,A,…,Z,:,,(\coma),LF\},$$
+$$\Pi_{file}​=\{0,…,9,a,…,z,A,…,Z,:, (',' coma)\},$$
+
+Let:
+- $D$ be a subset of $\Pi_{file}$ such that $D$ contains only digits $D\subset \Pi_{file} = \{0,...,9\}$
+- $\Sigma$ be a subset of $\Pi_{file}$ such that $\Sigma$ contains only lower-case letters $\Sigma\subset \Pi_{file} = \{a,...,z\}$
+- $\Gamma$ be a subset of $\Pi_{file}$ such that $\Gamma\subset \Pi_{file} = \{A,...,Z\}$
+
+The formal language $L_{SWE}$ is defined as follows:
+$$L_{SWE} = \{ w \in \Pi_{file}^* | w = l_1 l_2 ... l_n, l_1 \in D^+, l_2 \in \Sigma^*, l_3,...,l_{k+2} \in (\Sigma \cup \Gamma)^*, l_{k+3},...,l_m \in \Gamma : R_j, R_j \subseteq \Sigma^* \}$$
+
+Where:
+- $l_1$ is the first line containing the number $k$
+- $l_2$ is the second line containing the string $s$
+- $l_3,...,l_{k+2}$ are the following $k$ lines containing the strings $t_1,...,t_k$
+- $l_{k+3},...,l_m$ are the last lines starting with a letter $\gamma_j \in \Gamma$ followed by a colon and the contents of the set $R_j$ belonging to the letter, where the elements of the set are separated by commas. The last lines should be at most 26 lines, thus $m - (k-3) \leq 26$.
 
 ### d) Decision to Optimization Algorithm Conversion
 Assume you are given an algorithm $A_d$ for the decision version of SuperStringWithExpansion as described above. Show how to convert it into an algorithm $A_o$ for the optimization version of the problem, i.e., an algorithm that given the specified input, computes the sequence of words $r_1, r_2,...,r_m$ or answers NO if no such sequence exists. The algorithm $A_o$ has to run in polynomial time, assuming that a call to $A_d$ takes one computational step. Prove running time and correctness.
