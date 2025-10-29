@@ -116,7 +116,21 @@ Where:
 - $l_{k+3},...,l_m$ are the last lines starting with a letter $\gamma_j \in \Gamma$ followed by a colon and the contents of the set $R_j$ belonging to the letter, where the elements of the set are separated by commas. The last lines should be at most 26 lines, thus $m - (k-3) \leq 26$.
 
 ### d) Decision to Optimization Algorithm Conversion
-Assume you are given an algorithm $A_d$ for the decision version of SuperStringWithExpansion as described above. Show how to convert it into an algorithm $A_o$ for the optimization version of the problem, i.e., an algorithm that given the specified input, computes the sequence of words $r_1, r_2,...,r_m$ or answers NO if no such sequence exists. The algorithm $A_o$ has to run in polynomial time, assuming that a call to $A_d$ takes one computational step. Prove running time and correctness.
+1. First we call the decision algorithm $A_d$ using the given inputs. If $A_d$ returns NO, then return $A_o$ outputs NO.
+2. If the output is YES, initialize an empty list for, that we append the solution to. Process the $\gamma_j$ in order from $j = 1$ to $m$. (First For Loop)
+3. Now we iterate over $r \in R_j$, create a reduced instance: (Second For Loop)
+   - Replace every occurrence of $\gamma_j$ in each $t_i$ (for $i = 1$ to $k$) with the string $r$, producing new strings $t_i'$.
+   - Remove $\gamma_j$ from $\Gamma$, producing $\Gamma'$.
+   - Remove $R_j$ from the list of subsets, keeping $R_{j+1}, \dots, R_m$.
+   - The string $s$ remains unchanged
+   - Call $A_d$ on this reduced instance as follows: $$(s, t_1', \dots, t_k', \Gamma', R_{j+1}, \dots, R_m)$$ If $A_d$ outputs YES, fix $r_j = r$, append it to the solution list, update the current instance to this reduced one (e.g set $t_i = t_i'$ for all $i$, $\Gamma = \Gamma'$, and remove $R_j$), and proceed to $j+1$ (Continue to the First For Loop).
+   - If $A_d$ outputs NO, Continue the Second Loop.
+4. After fixing all $r_1$ to $r_m$, output the solution list in the required format (or NO if the initial check failed).
+
+Note: Since the current instance is a YES instance at the start, there exists at least one $r \in R_j$ for which the reduced instance is a YES. Therefore, such an $r$ will be found.
+
+Correctness: If the original input is a NO, $A_o$ correctly outputs NO, as seen on the 1st step. If YES, each fixation preserves the YES property, as we only choose $r$ where the reduced instance remains YES. At the end, with no $\gamma$ left, the fully expanded $t_i$ are substrings of $s$, so the sequence remains a valid solution.
+Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
 
 ### e) NP Membership
 Show that SuperStringWithExpansion is in NP.
