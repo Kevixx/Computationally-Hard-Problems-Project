@@ -7,13 +7,13 @@
 **Problem:** [SuperStringWithExpansion]
 
 ### Input:
-- **a)** 2 disjoint alphabets called $\Sigma$ and $\Gamma = \{\gamma_1,...,\gamma_m\}$,
-- **b)** a string $s \in \Sigma^*$,
-- **c)** $k$ strings $t_1,...,t_k \in (\Sigma \cup \Gamma)^*$,
-- **d)** and subsets $R_1,...,R_m \subseteq \Sigma^*$, all being of finite size.
+- **a)** 2 disjoint alphabets called $\Sigma$ and $\Gamma = \lbrace \gamma_1,\dots,\gamma_m \rbrace$,
+- **b)** a string $s \in \Sigma^{\ast}$,
+- **c)** $k$ strings $t_1,...,t_k \in (\Sigma \cup \Gamma)^{\ast}$,
+- **d)** and subsets $R_1,...,R_m \subseteq \Sigma^{\ast}$, all being of finite size.
 
 ### Output:
-**YES** if there is a sequence of words $r_1 \in R_1, r_2 \in R_2,...,r_m \in R_m$ such that for all $i \in \{1,...,k\}$ the so-called expansion $e(t_i)$ is a substring of $s$; the expansion $e(\gamma_j)$ of the $j$-th letter $\gamma_j \in \Gamma$, $1 \leq j \leq m$, is defined by $e(\gamma_j) := r_j$, and the expansion $e(t)$ of a whole string $t \in (\Sigma \cup \Gamma)^*$ is obtained by replacing all letters from $\Gamma$ appearing within $t$ by their expansions. Otherwise output **NO**.
+**YES** if there is a sequence of words $r_1 \in R_1, r_2 \in R_2,...,r_m \in R_m$ such that for all $i \in \lbrace 1,...,k  \rbrace$ the so-called expansion $e(t_i)$ is a substring of $s$; the expansion $e(\gamma_j)$ of the $j$-th letter $\gamma_j \in \Gamma$, $1 \leq j \leq m$, is defined by $e(\gamma_j) := r_j$, and the expansion $e(t)$ of a whole string $t \in (\Sigma \cup \Gamma)^{\ast}$ is obtained by replacing all letters from $\Gamma$ appearing within $t$ by their expansions. Otherwise output **NO**.
 
 ---
 
@@ -29,9 +29,9 @@ Replacing the $i$-th letter $v_i$ of the string $v = v_1v_2 \cdots v_{\ell_v}$ b
 
 ## SWE File Format
 
-Problem instances on the alphabets $\Sigma = \{a,b,...,z\}$, $\Gamma \subseteq \{A,B,...,Z\}$ are given as text files in the following SWE format:
+Problem instances on the alphabets $\Sigma = \lbrace a,b,...,z  \rbrace$, $\Gamma \subseteq \lbrace A,B,...,Z  \rbrace$ are given as text files in the following SWE format:
 
-The file is an ASCII file consisting of lines separated by the line-feed symbol; besides the line-feed, the only allowed characters in the file are numbers $\{0,1,...,9\}$, lower-case letters ($\Sigma$), upper-case letters ($\Gamma$), the colon (`:`), and the comma symbol (`,`).
+The file is an ASCII file consisting of lines separated by the line-feed symbol; besides the line-feed, the only allowed characters in the file are numbers $\lbrace 0,1,...,9  \rbrace$, lower-case letters ($\Sigma$), upper-case letters ($\Gamma$), the colon (`:`), and the comma symbol (`,`).
 
 ### Format Structure:
 1. The first line contains the number $k$`
@@ -63,11 +63,12 @@ Read and understand the problem. You do not have to comment on this in the repor
 
 ### b) Test Case Analysis
 Determine whether the answer for test01.SWE is YES or NO and justify your solution.
+Determine whether the answer for `test01.SWE` is YES or NO and justify your solution.
 
 - For the answer to be YES, all of the expansions must be substrings of `abdde`. 
 - For the answer to be NO, at least one expansion must not be a substring of `abdde`.
 
-Analyze the expansions of each string $ t_i $:
+Analyze the expansions of each string $t_i$:
 1. For $t_1 = ABD$, valid expansions are:
    - `a` + `b` + `d` = `abd`
    - `a` + `b` + `dd` = `abdd`
@@ -99,15 +100,20 @@ Analyze the expansions of each string $ t_i $:
 ### c) Formal Language Description
 Describe the formal language that we use in the .SWE file format to represent inputs to SuperStringWithExpansion and describe how to solve the word problem for a word over the underlying alphabet. Note that every formal language is defined over a single alphabet only.
 
-$$\Pi_{file}​=\{0,…,9,a,…,z,A,…,Z,:, (',' coma)\},$$
+$$
+\Pi_{file}​= \lbrace 0,…,9,a,…,z,A,…,Z,:, (',' coma) \rbrace ,
+$$
 
 Let:
-- $D$ be a subset of $\Pi_{file}$ such that $D$ contains only digits $D\subset \Pi_{file} = \{0,...,9\}$
-- $\Sigma$ be a subset of $\Pi_{file}$ such that $\Sigma$ contains only lower-case letters $\Sigma\subset \Pi_{file} = \{a,...,z\}$
-- $\Gamma$ be a subset of $\Pi_{file}$ such that $\Gamma\subset \Pi_{file} = \{A,...,Z\}$
+- $D$ be a subset of $\Pi_{file}$ such that $D$ contains only digits $D\subset \Pi_{file} = \lbrace 0,...,9  \rbrace$
+- $\Sigma$ be a subset of $\Pi_{file}$ such that $\Sigma$ contains only lower-case letters $\Sigma\subset \Pi_{file} = \lbrace a,...,z  \rbrace$
+- $\Gamma$ be a subset of $\Pi_{file}$ such that $\Gamma\subset \Pi_{file} = \lbrace A,...,Z  \rbrace$
 
 The formal language $L_{SWE}$ is defined as follows:
-$$L_{SWE} = \{ w \in \Pi_{file}^* | w = l_1 l_2 ... l_n, l_1 \in D^+, l_2 \in \Sigma^*, l_3,...,l_{k+2} \in (\Sigma \cup \Gamma)^*, l_{k+3},...,l_m \in \Gamma : R_j, R_j \subseteq \Sigma^* \}$$
+
+$$
+L_{SWE} = \lbrace w \in \Pi_{file}^{\ast} | w = l_1 l_2 ... l_n, l_1 \in D^+, l_2 \in \Sigma^{\ast}, l_3,...,l_{k+2} \in (\Sigma \cup \Gamma)^{\ast}, l_{k+3},...,l_m \in \Gamma : R_j, R_j \subseteq \Sigma^{\ast}  \rbrace
+$$
 
 Where:
 - $l_1$ is the first line containing the number $k$
@@ -119,18 +125,24 @@ Where:
 1. First we call the decision algorithm $A_d$ using the given inputs. If $A_d$ returns NO, then return $A_o$ outputs NO.
 2. If the output is YES, initialize an empty list for, that we append the solution to. Process the $\gamma_j$ in order from $j = 1$ to $m$. (First For Loop)
 3. Now we iterate over $r \in R_j$, create a reduced instance: (Second For Loop)
-   - Replace every occurrence of $\gamma_j$ in each $t_i$ (for $i = 1$ to $k$) with the string $r$, producing new strings $t_i'$.
-   - Remove $\gamma_j$ from $\Gamma$, producing $\Gamma'$.
-   - Remove $R_j$ from the list of subsets, keeping $R_{j+1}, \dots, R_m$.
-   - The string $s$ remains unchanged
-   - Call $A_d$ on this reduced instance as follows: $$(s, t_1', \dots, t_k', \Gamma', R_{j+1}, \dots, R_m)$$ If $A_d$ outputs YES, fix $r_j = r$, append it to the solution list, update the current instance to this reduced one (e.g set $t_i = t_i'$ for all $i$, $\Gamma = \Gamma'$, and remove $R_j$), and proceed to $j+1$ (Continue to the First For Loop).
-   - If $A_d$ outputs NO, Continue the Second Loop.
+  - Replace every occurrence of $\gamma_j$ in each $t_i$ (for $i = 1$ to $k$) with the string $r$, producing new strings $t_i'$.
+  - Remove $\gamma_j$ from $\Gamma$, producing $\Gamma'$.
+  - Remove $R_j$ from the list of subsets, keeping $R_{j+1}, \dots, R_m$.
+  - The string $s$ remains unchanged
+  - Call $A_d$ on this reduced instance as follows: 
+  
+  $$
+  (s, t_1', \dots, t_k', \Gamma', R_{j+1}, \dots, R_m)
+  $$ 
+  
+  If $A_d$ outputs YES, fix $r_j = r$, append it to the solution list, update the current instance to this reduced one (e.g set $t_i = t_i'$ for all $i$, $\Gamma = \Gamma'$, and remove $R_j$), and proceed to $j+1$ (Continue to the First For Loop).
+  - If $A_d$ outputs NO, Continue the Second Loop.
 4. After fixing all $r_1$ to $r_m$, output the solution list in the required format (or NO if the initial check failed).
 
 Note: Since the current instance is a YES instance at the start, there exists at least one $r \in R_j$ for which the reduced instance is a YES. Therefore, such an $r$ will be found.
 
 Correctness: If the original input is a NO, $A_o$ correctly outputs NO, as seen on the 1st step. If YES, each fixation preserves the YES property, as we only choose $r$ where the reduced instance remains YES. At the end, with no $\gamma$ left, the fully expanded $t_i$ are substrings of $s$, so the sequence remains a valid solution.
-Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
+Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$ ). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
 
 ### e) NP Membership
 Show that SuperStringWithExpansion is in NP.
@@ -183,17 +195,17 @@ The three blocks **[b)–f)]**, **[g),h)]**, and **[i)]** have approximately wei
 
 ### Problem: [PartitionInto3-Sets]
 
-**Input:** A sequence $X = (x_1,x_2,...,x_{3n})$ of $3n$ natural numbers, and a natural number $B$, such that $(B/4) < x_i < (B/2)$ for all $i \in \{1,2,...,3n\}$ and $\sum_{i=1}^{3n} x_i = nB$.
+**Input:** A sequence $X = (x_1,x_2,...,x_{3n})$ of $3n$ natural numbers, and a natural number $B$, such that $(B/4) < x_i < (B/2)$ for all $i \in \lbrace 1,2,...,3n  \rbrace$ and $\sum_{i=1}^{3n} x_i = nB$.
 
-**Output:** YES if $X$ can be partitioned into $n$ disjoint sets $X_1,X_2,...,X_n$ such that for all $j \in \{1,2,...,n\}$ one has $\sum_{x \in X_j} x = B$.
+**Output:** YES if $X$ can be partitioned into $n$ disjoint sets $X_1,X_2,...,X_n$ such that for all $j \in \lbrace 1,2,...,n  \rbrace$ one has $\sum_{x \in X_j} x = B$.
 
 ---
 
 ### Problem: [1-In-3-Satisfiability]
 
-**Input:** A set of clauses $C = \{c_1,...,c_k\}$ over $n$ boolean variables $x_1,...,x_n$, where every clause contains exactly three literals.
+**Input:** A set of clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $x_1,...,x_n$, where every clause contains exactly three literals.
 
-**Output:** YES if there is a satisfying assignment such that every clause has exactly one true literal, i.e., if there is an assignment $a: \{x_1,...,x_n\} \to \{0,1\}$ such that every clause $c_j$ is satisfied and no clause has two or three satisfied literals, and NO otherwise.
+**Output:** YES if there is a satisfying assignment such that every clause has exactly one true literal, i.e., if there is an assignment $a: \lbrace x_1,...,x_n \rbrace \to \lbrace 0,1  \rbrace$ such that every clause $c_j$ is satisfied and no clause has two or three satisfied literals, and NO otherwise.
 
 ---
 
@@ -201,7 +213,7 @@ The three blocks **[b)–f)]**, **[g),h)]**, and **[i)]** have approximately wei
 
 **Input:** An undirected graph $G = (V,E)$ and a natural number $k$.
 
-**Output:** YES if there is clique cover for $G$ of size at most $k$. That is, a collection $V_1,V_2,...,V_k$ of not necessarily disjoint subsets of $V$, such that each $V_i$ induces a complete subgraph of $G$ and such that for each edge $\{u,v\} \in E$ there is some $V_i$ that contains both $u$ and $v$. NO otherwise.
+**Output:** YES if there is clique cover for $G$ of size at most $k$. That is, a collection $V_1,V_2,...,V_k$ of not necessarily disjoint subsets of $V$, such that each $V_i$ induces a complete subgraph of $G$ and such that for each edge $\lbrace u,v \rbrace \in E$ there is some $V_i$ that contains both $u$ and $v$. NO otherwise.
 
 ---
 
