@@ -1,10 +1,10 @@
-# SuperStringWithExpansion Problem
+# `SuperStringWithExpansion` Problem
 
 ---
 
 ## Problem Statement
 
-**Problem:** [SuperStringWithExpansion]
+**Problem:** [`SuperStringWithExpansion`]
 
 ### Input:
 - **a)** 2 disjoint alphabets called $\Sigma$ and $\Gamma = \lbrace \gamma_1,\dots,\gamma_m \rbrace$,
@@ -62,7 +62,6 @@ E:aa,bd,c,d,e
 Read and understand the problem. You do not have to comment on this in the report.
 
 ### b) Test Case Analysis
-Determine whether the answer for test01.SWE is YES or NO and justify your solution.
 Determine whether the answer for `test01.SWE` is YES or NO and justify your solution.
 
 - For the answer to be YES, all of the expansions must be substrings of `abdde`. 
@@ -98,7 +97,7 @@ Analyze the expansions of each string $t_i$:
 
 
 ### c) Formal Language Description
-Describe the formal language that we use in the .SWE file format to represent inputs to SuperStringWithExpansion and describe how to solve the word problem for a word over the underlying alphabet. Note that every formal language is defined over a single alphabet only.
+Describe the formal language that we use in the .SWE file format to represent inputs to `SuperStringWithExpansion` and describe how to solve the word problem for a word over the underlying alphabet. Note that every formal language is defined over a single alphabet only.
 
 $$
 \Pi_{file}​= \lbrace 0,…,9,a,…,z,A,…,Z,:, (',' coma) \rbrace ,
@@ -145,13 +144,64 @@ Correctness: If the original input is a NO, $A_o$ correctly outputs NO, as seen 
 Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$ ). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
 
 ### e) NP Membership
-Show that SuperStringWithExpansion is in NP.
+Show that `SuperStringWithExpansion` is in NP.
 
 ### f) NP-Completeness
-Show that SuperStringWithExpansion is NP-complete. As reference problem you have to select a problem from the list of NP-complete problems given below. Note that there may be many different approaches to prove NP-completeness.
+> Show that `SuperStringWithExpansion (SWE)` is NP-complete. As reference problem you have to select a problem from the list of NP-complete problems given below. Note that there may be many different approaches to prove NP-completeness.
 
+To show that `SWE` is NP-complete, two conditions must be satisfied:
+1. Prove that `SWE` is in NP ( $P \in NP$ ) (proven in part _e_).
+2. Prove that a NP-complete problem $P_c$ can be transformed through reduction to `SWE` in polynomial time  $P_c \leq_p P$.
+
+For the proof we choose `1-In-3-SATISFIABILITY (1-In-3-SAT)` because of its similarity to `SWE`.
+
+### Construction
+The construct requires a polynomial-time reduction $T$ that maps any instance of `1-In-3-SAT` to an instance of `SWE` such that the original instance is satisfiable if and only if the constructed instance is a YES-instance.
+
+Let an instance of `1-In-3-SAT` ( $\Kappa'$ ) be given by a set of $k$ clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $l_1,...,l_n$, where every clause contains exactly three literals. Each literal is either a $x_j$ or $\neg x_j$.
+
+An instance of `SWE` ( $\Kappa'$ ) is constructed  as follows:
+- Alphabet $\Sigma = \lbrace t, f, \#  \rbrace$ where $t$ represents true, $f$ false, and $\#$ is a separator.
+- Alphabet $\Gamma = \lbrace Y_1, Y_1', Y_2, Y_2', ..., Y_n, Y_n'  \rbrace$ where $Y_j$ represents $x_j$ and $Y_j'$ represents $\neg x_j$. There are $2n$ symbols in total.
+- For every symbol in $\Gamma$, there is a corresponding set $R_i$ defined as follows for $i = 1 \text{ to } n$:
+  
+   ``` math
+   R_i = \lbrace t, f \rbrace \\
+   R_i' = \lbrace t, f \rbrace
+   ```
+
+- For every clause $c_i = (l_{i1} \lor l_{i2} \lor l_{i3})$, a template string is created$t_i = \Gamma(l_{i1}) \Gamma(l_{i2}) \Gamma(l_{i3})$ where $\Gamma(l) = Y_j$ if $l = x_j$ and $\Gamma(l) = Y_j'$ if $l = \neg x_j$.
+
+   - For example, for the clause $C_1 = (x_1 \lor \neg x_2 \lor x_3)$, the corresponding template would be $t_1 = Y_1\;Y_2'\;Y_3$.
+
+
+
+The string $s$ should follow the rule that every 3-letter words over $\lbrace t, f \rbrace$ contains at most one $t$ (true) (`1-In-3-SAT`). the string $s$ can include any of the following substrings: `tff`, `ftf`, `fft`. In addition, since there is a relation between the variables (regular variable and its negation), the string $s$ should include the consistency substrings `tf`, `ft` for each variable $x_j$ to ensure that both $Y_j$ and $Y_j'$ cannot be true at the same time.
+
+The string $s$ can be constructed compactly as 
+
+$$
+   s=\text{tf\#ft\#tff\#ftf\#fft}.
+$$
+
+### Proof
+To prove the correctness, we must show that the `1-In-3-SAT` instance is satisfiable if and only if the constructed `SWE` instance has a "YES" answer.
+
+( $\Rarr$ ) If $\Phi$ has a 1-in-3 satisfying assignment $a$, define for each variable $x_i$ the expansions
+
+- $e(Y_i)=T$ iff $a(x_i)=\text{true}$,
+- $e(Y_i')=F$ (the opposite value).
+
+Then each consistency template $Y_iY_i'$ expands to either $tf$ or $ft$ (both present in $s$). Each clause template expands to one of $tff$, $ftf$, or $fft$ (exactly one literal true), all present in $s$. Hence every template expansion is a substring of $s$.
+
+( $\lArr$ ) Conversely, if there exist expansions for all $\Gamma$-symbols such that every template expansion is a substring of $s$, then every consistency template $Y_iY_i'$ must expand to $tf$ or $ft$ (because $tt$ and $ff$ are absent from $s$). Thus $e(Y_i)\neq e(Y_i')$ for all $i$. Define the assignment $a$ by $a(x_i)=\text{true}$ iff $e(Y_i)=T$. Since every clause template expands to one of $tff$, $ftf$, or $fft$ (the only valid combinations), each clause has exactly one true literal under $a$. Therefore $\Phi$ is 1-in-3 satisfiable.
+
+Complexity. The construction uses $O(n+k)$ symbols/templates and runs in polynomial time. Since `SWE` is in NP (verification is polynomial-time), this reduction proves NP-hardness and hence NP-completeness.
+
+
+---
 ### g) Algorithm Design
-Design an algorithm which receives an input to SuperStringWithExpansion in the general format given above (not restricted to .SWE format) and always gives the correct answer, i.e., which always stops and determines whether the input instance is a YES or NO instance. The algorithm is allowed to have exponential worst-case running time (i.e. bounded by $2^{p(n)}$, where $n$ is the size of the input and $p$ some polynomial), but should contain some heuristic elements that allow for faster execution on certain types of instances. For example, a heuristic may be used to quickly identify cases where the answer must be NO. Describe in natural language how the algorithm works, prove its correctness and running time, and explain the heuristic elements.
+Design an algorithm which receives an input to `SuperStringWithExpansion` in the general format given above (not restricted to .SWE format) and always gives the correct answer, i.e., which always stops and determines whether the input instance is a YES or NO instance. The algorithm is allowed to have exponential worst-case running time (i.e. bounded by $2^{p(n)}$, where $n$ is the size of the input and $p$ some polynomial), but should contain some heuristic elements that allow for faster execution on certain types of instances. For example, a heuristic may be used to quickly identify cases where the answer must be NO. Describe in natural language how the algorithm works, prove its correctness and running time, and explain the heuristic elements.
 
 When you later implement the algorithm (part i) below), you have to restrict its inputs to .SWE files. If the instance is a NO-instance (including the input is malformed, i.e., does not comply with .SWE format), your algorithm must output NO. If it is a YES-instance, your algorithm has to construct a solution $r_1,...,r_m$ and output the solution. The format of the output should then only be a list of lines in the format $\gamma_i : r_i$, where $\gamma_i$ is an upper-case letter and $r_i$ the chosen element of $R_i$, for example (not a solution to test01.SWE):
 
