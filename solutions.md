@@ -170,7 +170,7 @@ An instance of `SWE` ( $K'$ ) is constructed  as follows:
    R_i' = \lbrace t, f \rbrace
 ```
 
-- For every clause $c_i = (l_{i1} \lor l_{i2} \lor l_{i3})$, a template string is created$t_i = \Gamma(l_{i1}) \Gamma(l_{i2}) \Gamma(l_{i3})$ where $\Gamma(l) = Y_j$ if $l = x_j$ and $\Gamma(l) = Y_j'$ if $l = \neg x_j$.
+- For every clause $c_i = (l_{i1} \lor l_{i2} \lor l_{i3})$, a template string is created $t_i = \Gamma(l_{i1}) \Gamma(l_{i2}) \Gamma(l_{i3})$ where $\Gamma(l) = Y_j$ if $l = x_j$ and $\Gamma(l) = Y_j'$ if $l = \neg x_j$.
 
    - For example, for the clause $C_1 = (x_1 \lor \neg x_2 \lor x_3)$, the corresponding template would be $t_1 = Y_1\;Y_2'\;Y_3$.
 
