@@ -158,17 +158,17 @@ For the proof we choose `1-In-3-SATISFIABILITY (1-In-3-SAT)` because of its simi
 ### Construction
 The construct requires a polynomial-time reduction $T$ that maps any instance of `1-In-3-SAT` to an instance of `SWE` such that the original instance is satisfiable if and only if the constructed instance is a YES-instance.
 
-Let an instance of `1-In-3-SAT` ( $\Kappa'$ ) be given by a set of $k$ clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $l_1,...,l_n$, where every clause contains exactly three literals. Each literal is either a $x_j$ or $\neg x_j$.
+Let an instance of `1-In-3-SAT` ( $K'$ ) be given by a set of $k$ clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $l_1,...,l_n$, where every clause contains exactly three literals. Each literal is either a $x_j$ or $\neg x_j$.
 
-An instance of `SWE` ( $\Kappa'$ ) is constructed  as follows:
-- Alphabet $\Sigma = \lbrace t, f, \#  \rbrace$ where $t$ represents true, $f$ false, and $\#$ is a separator.
+An instance of `SWE` ( $K'$ ) is constructed  as follows:
+- Alphabet $\Sigma = \lbrace t, f, @  \rbrace$ where $t$ represents true, $f$ false, and $@$ is a separator ('# ' unavailable in math equations).
 - Alphabet $\Gamma = \lbrace Y_1, Y_1', Y_2, Y_2', ..., Y_n, Y_n'  \rbrace$ where $Y_j$ represents $x_j$ and $Y_j'$ represents $\neg x_j$. There are $2n$ symbols in total.
 - For every symbol in $\Gamma$, there is a corresponding set $R_i$ defined as follows for $i = 1 \text{ to } n$:
   
-   ``` math
+``` math
    R_i = \lbrace t, f \rbrace \\
    R_i' = \lbrace t, f \rbrace
-   ```
+```
 
 - For every clause $c_i = (l_{i1} \lor l_{i2} \lor l_{i3})$, a template string is created$t_i = \Gamma(l_{i1}) \Gamma(l_{i2}) \Gamma(l_{i3})$ where $\Gamma(l) = Y_j$ if $l = x_j$ and $\Gamma(l) = Y_j'$ if $l = \neg x_j$.
 
@@ -181,20 +181,20 @@ The string $s$ should follow the rule that every 3-letter words over $\lbrace t,
 The string $s$ can be constructed compactly as 
 
 $$
-   s=\text{tf\#ft\#tff\#ftf\#fft}.
+   s=\text{tf@ft@tff@ftf@fft}.
 $$
 
 ### Proof
 To prove the correctness, we must show that the `1-In-3-SAT` instance is satisfiable if and only if the constructed `SWE` instance has a "YES" answer.
 
-( $\Rarr$ ) If $\Phi$ has a 1-in-3 satisfying assignment $a$, define for each variable $x_i$ the expansions
+( $\Longrightarrow$ ) If $\Phi$ has a 1-in-3 satisfying assignment $a$, define for each variable $x_i$ the expansions
 
 - $e(Y_i)=T$ iff $a(x_i)=\text{true}$,
 - $e(Y_i')=F$ (the opposite value).
 
 Then each consistency template $Y_iY_i'$ expands to either $tf$ or $ft$ (both present in $s$). Each clause template expands to one of $tff$, $ftf$, or $fft$ (exactly one literal true), all present in $s$. Hence every template expansion is a substring of $s$.
 
-( $\lArr$ ) Conversely, if there exist expansions for all $\Gamma$-symbols such that every template expansion is a substring of $s$, then every consistency template $Y_iY_i'$ must expand to $tf$ or $ft$ (because $tt$ and $ff$ are absent from $s$). Thus $e(Y_i)\neq e(Y_i')$ for all $i$. Define the assignment $a$ by $a(x_i)=\text{true}$ iff $e(Y_i)=T$. Since every clause template expands to one of $tff$, $ftf$, or $fft$ (the only valid combinations), each clause has exactly one true literal under $a$. Therefore $\Phi$ is 1-in-3 satisfiable.
+( $\Longleftarrow$ ) Conversely, if there exist expansions for all $\Gamma$-symbols such that every template expansion is a substring of $s$, then every consistency template $Y_iY_i'$ must expand to $tf$ or $ft$ (because $tt$ and $ff$ are absent from $s$). Thus $e(Y_i)\neq e(Y_i')$ for all $i$. Define the assignment $a$ by $a(x_i)=\text{true}$ iff $e(Y_i)=T$. Since every clause template expands to one of $tff$, $ftf$, or $fft$ (the only valid combinations), each clause has exactly one true literal under $a$. Therefore $\Phi$ is 1-in-3 satisfiable.
 
 Complexity. The construction uses $O(n+k)$ symbols/templates and runs in polynomial time. Since `SWE` is in NP (verification is polynomial-time), this reduction proves NP-hardness and hence NP-completeness.
 
