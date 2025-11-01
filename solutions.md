@@ -144,7 +144,17 @@ Correctness: If the original input is a NO, $A_o$ correctly outputs NO, as seen 
 Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$ ). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
 
 ### e) NP Membership
-Show that `SuperStringWithExpansion` is in NP.
+As mentioned in the question, the problem is a decision problem. Let R be interpreted from Random Bits. We define the certificate $R$. as a sequence of choices for $r_1 \in R_1, \dots, r_m \in R_m$. Since each $R_j$ is finite and listed in the input, we can encode the choice of each $r_j$ by an index into $R_j$ (requiring $O(\log |R_j|)$ bits per $j$). As $|R_j| \leq n$ (bounded by input size) and $m \leq n$, the total length of $R$ is $O(m \log n) = O(n \log n)$, which is polynomial in $n$.
+
+The algorithm $A(X, R)$ is as follows (deterministic verifier, where $R$ is randomized):
+1. First, we'll parse R to pull out the selected choices r1​,…,rm​ based on the indices provided. If any index doesn't match up with its corresponding Rj, we simply output NO.
+2. For each $i = 1$ to $k$:
+   - Compute the expansion $e(t_i)$ by replacing every occurrence of $\gamma_j$ in $t_i$ with $r_j$, leaving symbols from $\Sigma$ unchanged.
+   - Check if $e(t_i)$ is a substring of $s$
+3. If all $k$ expansions are substrings of $s$, output YES; otherwise, output NO.
+
+If $X$ is a YES-instance, there exists at least one sequence $r_1, \dots, r_m$ such that all $e(t_i)$ are substrings of $s$. The corresponding $R$ (encoding those choices) makes $A(X, R) =$ YES, so $\Pr[A(X, R) = \text{YES}] > 0$ at least one good $R$ out of $2^{O(n \log n)}$.
+If $X$ is a NO-instance, no such sequence exists, so for all $R$, $A(X, R) =$ NO, hence $\Pr[A(X, R) = \text{NO}] = 1$.
 
 ### f) NP-Completeness
 > Show that `SuperStringWithExpansion (SWE)` is NP-complete. As reference problem you have to select a problem from the list of NP-complete problems given below. Note that there may be many different approaches to prove NP-completeness.
