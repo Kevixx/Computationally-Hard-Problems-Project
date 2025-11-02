@@ -6,6 +6,12 @@ import sys
 
 def main(swe_path: Path):
     target_string, patterns, expansion_map = read_swe_file(swe_path)
+    
+    # If target_string is empty, NO
+    if not target_string:
+        print("NO")
+        return
+
     print(log_expansion_assignments(build_expanded_options(patterns, expansion_map), patterns, target_string))
 
 
@@ -13,7 +19,12 @@ def main(swe_path: Path):
 # We read the SWE file line by line, stripping the newline character at the end of each line.
 def read_swe_file(file_path) -> tuple[str, list[list[str]], dict[str, list[str]]]:
     with open(file_path, 'r') as swe_file:
-        k = int(swe_file.readline().rstrip('\n'))
+        
+        try:
+            k = int(swe_file.readline().rstrip('\n'))
+
+        except:
+            return "", [], {}
 
         s = swe_file.readline().rstrip('\n')
 
@@ -121,7 +132,7 @@ def log_expansion_assignments(options_list, patterns, target_string) -> str:
         for match in matches:
             for token, value in zip(pattern, match):
                 if isinstance(token, str) and token.isupper():
-                    log += f"{token}: {value}\n"
+                    log += f"\n{token}: {value}"
 
         if patterns.index(pattern) != len(patterns) - 1:
             log += "\n"
