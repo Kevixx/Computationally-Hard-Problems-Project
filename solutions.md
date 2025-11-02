@@ -270,17 +270,23 @@ For each pattern $ t_i $, solve:
 Find assignment $ r_1, \dots, r_{P_i} $ such that $ e(t_i) = r_1 \cdots r_{P_i} $ is a substring of $ s $.
 
 Backtracking procedure:
-pythonCollapseWrapRunCopybacktrack(idx, current_string, path):
-    if idx == len(tokens):
-        if current_string in s:  # substring check
-            record path
-        return
-    for choice in options[idx]:
-        new_str = current_string + choice
-        if s.find(new_str) == -1:  # early pruning
-            continue
-        backtrack(idx + 1, new_str, path + [choice])
-        if found: early exit (first solution)
+
+      backtrack(idx, current_string, path):
+          if idx == len(tokens):
+              if current_string in s:  # substring check
+                  record path
+
+              return
+          for choice in options[idx]:
+              new_str = current_string + choice
+
+              if s.find(new_str) == -1:  # early pruning
+                  continue
+
+              backtrack(idx + 1, new_str, path + [choice])
+
+              if found: early exit (first solution)
+            
 Heuristic Pruning (Key Optimization):
 
 At each step, after appending a choice, check if the prefix so far appears anywhere in $ s $ using str.find().
@@ -298,19 +304,26 @@ Otherwise, collect the first valid assignment per uppercase token across all pat
 If all patterns succeed: output lines γ: r for each chosen expansion of $ \gamma $.
 Else: output NO.
 
-Correctness Proof
+**Correctness Proof**
+
 Soundness:
+
 Only record a path if the fully expanded string is a substring of $ s $ (checked explicitly). All expansions respect $ R_j $.
 Completeness:
 Backtracking explores all combinations of expansions. Early pruning only skips prefixes not in $ s $, but any valid full string must have all prefixes in $ s $ → no valid solution is missed.
+
 Termination:
+
 Finite search space → terminates.
 
-Running Time (Worst Case)
+**Running Time (Worst Case)**
+
 Let:
 
 $ n = |s| + \sum |t_i| + \sum |R_j| $ = total input size.
+
 $ d = \max_j |R_j| $, maximum expansion set size.
+
 $ \ell = \max_i $ (number of tokens in $ t_i $).
 
 Then for one pattern: $ O(d^\ell) $ calls, each doing $ O(n) $ substring check → $ O(d^\ell \cdot n) $.
@@ -318,11 +331,12 @@ Total: $ k $ patterns →
 $$T(n) \leq k \cdot d^\ell \cdot n = O(2^{p(n)})$$
 since $ \ell \leq n $, $ d \leq n $, $ k \leq n $ → exponential, but allowed.
 
-Heuristic Elements
+**Heuristic Elements**
 
-Prefix pruning: s.find(current + choice) → eliminates impossible paths early.
-First-solution early exit: stop after finding one valid expansion per pattern.
-Process patterns sequentially: fail fast on first unsatisfiable pattern.
+Prefix pruning: 
+- s.find(current + choice) → eliminates impossible paths early.
+- First-solution early exit: stop after finding one valid expansion per pattern.
+- Process patterns sequentially: fail fast on first unsatisfiable pattern.
 
 These make the algorithm fast in practice on small/structured instances (e.g., test01.SWE), despite worst-case exponential.
 
@@ -355,6 +369,8 @@ Conclusion: Exponential in input size, as required.
 Implement the algorithm you developed in Part g). It has to be able to read inputs in .SWE format from standard input (not as a command line argument) and, as described in g), it must always solve the corresponding problem correctly by outputting a solution (or NO if no solution is possible) to standard output. It is important to use only standard input and standard output for communication, i.e., the program must not require additional command-line arguments or user interaction to read from a file etc. Failing to do so will reduce your score.
 
 We expect you to test your code on the instances published on DTU Learn as well as on other instances. If your code does not solve all tests test01.SWE–test06.SWE on DTU Learn, you should try to improve it. The teachers will take into account the total number of solved test instances (not necessarily limited to the ones on Learn) for the final score you receive for this whole assignment.
+
+Implemented code can be found in path `/code-group-17/code-group-17.py`
 
 ---
 
