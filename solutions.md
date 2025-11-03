@@ -246,31 +246,31 @@ E:e
 Read .SWE file from standard input (later in i)).
 Parse:
 
-First line: $ k \in \mathbb{N} $, number of patterns.
-Second line: $ s \in \Sigma^* $, target string.
-Next $ k $ lines: patterns $ t_1, \dots, t_k \in (\Sigma \cup \Gamma)^* $.
-Remaining lines: for each $ \gamma_j \in \Gamma $, line $ \gamma_j : r_{j1}, r_{j2}, \dots $.
+First line: $k \in \mathbb{N}$, number of patterns.
+Second line: $s \in \Sigma^*$, target string.
+Next $k$ lines: patterns $t_1, \dots, t_k \in (\Sigma \cup \Gamma)^*$.
+Remaining lines: for each $\gamma_j \in \Gamma$, line $\gamma_j : r_{j1}, r_{j2}, \dots$.
 
 Tokenization rule: Consecutive lowercase letters form a single token (e.g., dd → one token).
 
 2. Preprocessing
-For each pattern $ t_i $:
+For each pattern $t_i$:
 
 Split into tokens: lowercase sequences and uppercase letters are separate.
-Build $ \text{options}[i][j] $: list of possible expansions for token $ j $ in pattern $ i $.
+Build $\text{options}[i][j]$: list of possible expansions for token $j$ in pattern $i$.
 
-If token is lowercase string $ w $, then $ \text{options}[i][j] = [w] $.
-If token is $ \gamma \in \Gamma $, then $ \text{options}[i][j] = R_\gamma $.
+If token is lowercase string $w$, then $\text{options}[i][j] = [w]$.
+If token is $\gamma \in \Gamma$, then $\text{options}[i][j] = R_\gamma$.
 If unknown → empty list → immediate NO.
 
-Let $ P_i $ = number of tokens in pattern $ i $, $ |R_\gamma| $ = size of expansion set.
+Let $P_i$ = number of tokens in pattern $i$, $|R_\gamma|$ = size of expansion set.
 3. Backtracking Search (per pattern)
-For each pattern $ t_i $, solve:
+For each pattern $t_i$, solve:
 
-Find assignment $ r_1, \dots, r_{P_i} $ such that $ e(t_i) = r_1 \cdots r_{P_i} $ is a substring of $ s $.
+Find assignment $r_1, \dots, r_{P_i}$ such that $e(t_i) = r_1 \cdots r_{P_i}$ is a substring of $s$.
 
 Backtracking procedure:
-
+```python
       backtrack(idx, current_string, path):
           if idx == len(tokens):
               if current_string in s:  # substring check
@@ -286,12 +286,12 @@ Backtracking procedure:
               backtrack(idx + 1, new_str, path + [choice])
 
               if found: early exit (first solution)
-            
+```            
 Heuristic Pruning (Key Optimization):
 
-At each step, after appending a choice, check if the prefix so far appears anywhere in $ s $ using str.find().
+At each step, after appending a choice, check if the prefix so far appears anywhere in $s$ using str.find().
 If not → prune entire branch → avoids expanding impossible paths.
-This is sound (no valid solution missed) and effective when $ s $ is short or patterns grow quickly.
+This is sound (no valid solution missed) and effective when $s$ is short or patterns grow quickly.
 
 4. Sequential Processing
 
@@ -301,16 +301,16 @@ Otherwise, collect the first valid assignment per uppercase token across all pat
 
 5. Output
 
-If all patterns succeed: output lines γ: r for each chosen expansion of $ \gamma $.
+If all patterns succeed: output lines $\gamma: r$ for each chosen expansion of $\gamma$.
 Else: output NO.
 
 **Correctness Proof**
 
 Soundness:
 
-Only record a path if the fully expanded string is a substring of $ s $ (checked explicitly). All expansions respect $ R_j $.
+Only record a path if the fully expanded string is a substring of $s$ (checked explicitly). All expansions respect $R_j$.
 Completeness:
-Backtracking explores all combinations of expansions. Early pruning only skips prefixes not in $ s $, but any valid full string must have all prefixes in $ s $ → no valid solution is missed.
+Backtracking explores all combinations of expansions. Early pruning only skips prefixes not in $s$, but any valid full string must have all prefixes in $s$ → no valid solution is missed.
 
 Termination:
 
@@ -320,16 +320,16 @@ Finite search space → terminates.
 
 Let:
 
-$ n = |s| + \sum |t_i| + \sum |R_j| $ = total input size.
+$n = |s| + \sum |t_i| + \sum |R_j|$ = total input size.
 
-$ d = \max_j |R_j| $, maximum expansion set size.
+$d = \max_j |R_j|$, maximum expansion set size.
 
-$ \ell = \max_i $ (number of tokens in $ t_i $).
+$\ell = \max_i$ (number of tokens in $t_i$).
 
-Then for one pattern: $ O(d^\ell) $ calls, each doing $ O(n) $ substring check → $ O(d^\ell \cdot n) $.
-Total: $ k $ patterns →
+Then for one pattern: $O(d^\ell)$ calls, each doing $O(n)$ substring check → $O(d^\ell \cdot n)$.
+Total: $k$ patterns →
 $$T(n) \leq k \cdot d^\ell \cdot n = O(2^{p(n)})$$
-since $ \ell \leq n $, $ d \leq n $, $ k \leq n $ → exponential, but allowed.
+since $\ell \leq n$, $d \leq n$, $k \leq n$ → exponential, but allowed.
 
 **Heuristic Elements**
 
@@ -347,21 +347,33 @@ Analyze the worst-case running time of the algorithm with respect to the general
 Worst-Case Running Time (General Input)
 Let:
 
-$ |s| = n_s $
-$ \sum_i |t_i| = n_t $
-$ \sum_j |R_j| = n_R $
-$ n = n_s + n_t + n_R $ = total input size
-$ \ell_i $ = number of tokens in $ t_i $
-$ d = \max_j |R_j| $
+$|s| = n_s$
+$\sum_i |t_i| = n_t$
+$\sum_j |R_j| = n_R$
+$n = n_s + n_t + n_R$ = total input size
+$\ell_i =$ number of tokens in $t_i$
+$d = \max_j |R_j|$
 
-For pattern $ i $, backtracking explores up to:
-$$\prod_{j \text{ with } \gamma} |R_\gamma| \leq d^{\ell_i} \leq d^n$$
-Each node: $ O(n_s) $ time for find().
-Total per pattern: $ O(d^n \cdot n_s) $
-Over $ k \leq n $ patterns:
-$$T(n) = O(k \cdot d^n \cdot n_s) = O(n \cdot d^n \cdot n) = O(n^2 \cdot d^n)$$
-Since $ d \geq 2 $ possible,
-$$T(n) \in O(2^{p(n)})\ \text{for some polynomial } p$$
+For pattern $i$, backtracking explores up to:
+
+$$
+\prod_{j \text{ with } \gamma} |R_\gamma| \leq d^{\ell_i} \leq d^n
+$$
+
+Each node: $O(n_s)$ time for find().
+Total per pattern: $O(d^n \cdot n_s)$
+Over $k \leq n$ patterns:
+
+$$
+T(n) = O(k \cdot d^n \cdot n_s) = O(n \cdot d^n \cdot n) = O(n^2 \cdot d^n)
+$$
+
+Since $d \geq 2$ possible,
+
+$$
+T(n) \in O(2^{p(n)})\ \text{for some polynomial } p
+$$
+
 Conclusion: Exponential in input size, as required.
 
 ### i) Implementation
