@@ -2,72 +2,6 @@
 
 ---
 
-## Problem Statement
-
-**Problem:** [`SuperStringWithExpansion`]
-
-### Input
-
-- **a)** 2 disjoint alphabets called $\Sigma$ and $\Gamma = \lbrace \gamma_1,\dots,\gamma_m \rbrace$,
-- **b)** a string $s \in \Sigma^{\ast}$,
-- **c)** $k$ strings $t_1,...,t_k \in (\Sigma \cup \Gamma)^{\ast}$,
-- **d)** and subsets $R_1,...,R_m \subseteq \Sigma^{\ast}$, all being of finite size.
-
-### Output
-
-**YES** if there is a sequence of words $r_1 \in R_1, r_2 \in R_2,...,r_m \in R_m$ such that for all $i \in \lbrace 1,...,k  \rbrace$ the so-called expansion $e(t_i)$ is a substring of $s$; the expansion $e(\gamma_j)$ of the $j$-th letter $\gamma_j \in \Gamma$, $1 \leq j \leq m$, is defined by $e(\gamma_j) := r_j$, and the expansion $e(t)$ of a whole string $t \in (\Sigma \cup \Gamma)^{\ast}$ is obtained by replacing all letters from $\Gamma$ appearing within $t$ by their expansions. Otherwise output **NO**.
-
----
-
-## Formal Definitions
-
-### Substring
-
-We say that $v = v_1v_2 \cdots v_{\ell_v}$ is a substring of $w = w_1w_2 \cdots w_{\ell_w}$ if there is a $j$, $1 \leq j \leq \ell_w - \ell_v + 1$, such that for all $k = 1,2,...,\ell_v$ we have $v_k = w_{j+k-1}$.
-
-### String Replacement
-
-Replacing the $i$-th letter $v_i$ of the string $v = v_1v_2 \cdots v_{\ell_v}$ by the string $w = w_1w_2 \cdots w_{\ell_w}$ results in the string $v_1v_2 \cdots v_{i-1}w_1w_2 \cdots w_{\ell_w}v_{i+1}v_{i+2} \cdots v_{\ell_v}$.
-
----
-
-## SWE File Format
-
-Problem instances on the alphabets $\Sigma = \lbrace a,b,...,z  \rbrace$, $\Gamma \subseteq \lbrace A,B,...,Z  \rbrace$ are given as text files in the following SWE format:
-
-The file is an ASCII file consisting of lines separated by the line-feed symbol; besides the line-feed, the only allowed characters in the file are numbers $\lbrace 0,1,...,9  \rbrace$, lower-case letters ($\Sigma$), upper-case letters ($\Gamma$), the colon (`:`), and the comma symbol (`,`).
-
-### Format Structure
-
-1. The first line contains the number $k$`
-2. The second line contains the string $s$
-3. The following $k$ lines contain the strings $t_1,...,t_k$
-4. The last lines (at most 26) start with a letter $\gamma_j \in \Gamma$ followed by a colon and the contents of the set $R_j$ belonging to the letter, where the elements of the set are separated by commas
-
-### Example: test01.SWE
-
-```
-4
-abdde
-ABD
-DDE
-AAB
-ABd
-A:a,b,c,d,e,f,dd
-B:a,b,c,d,e,f,dd
-C:a,b,c,d,e,f,dd
-D:a,b,c,d,e,f,dd
-E:aa,bd,c,d,e
-```
-
----
-
-## Tasks
-
-### a) Problem Understanding - **Kevin**
-
-Read and understand the problem. You do not have to comment on this in the report.
-
 ### b) Test Case Analysis - **Bozhidar**
 
 Determine whether the answer for `test01.SWE` is YES or NO and justify your solution.
@@ -393,11 +327,3 @@ We expect you to test your code on the instances published on DTU Learn as well 
 Implemented code can be found in path `/code-group-17/code-group-17.py`
 
 ---
-
-## List of NP-complete Problems to Choose From
-
-### Problem: [PartitionInto3-Sets]
-
-**Input:** A sequence $X = (x_1,x_2,...,x_{3n})$ of $3n$ natural numbers, and a natural number $B$, such that $(B/4) < x_i < (B/2)$ for all $i \in \lbrace 1,2,...,3n  \rbrace$ and $\sum_{i=1}^{3n} x_i = nB$.
-
-**Output:** YES if $X$ can be partitioned into $n$ disjoint sets $X_1,X_2,...,X_n$ such that for all $j \in \lbrace 1,2,...,n  \rbrace$ one has $\sum_{x \in X_j} x = B$.
