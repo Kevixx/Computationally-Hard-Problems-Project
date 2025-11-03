@@ -235,7 +235,7 @@ At each step, after appending a choice, check if the prefix so far appears anywh
 If not → prune entire branch → avoids expanding impossible paths.
 This is sound (no valid solution missed) and effective when $s$ is short or patterns grow quickly.
 
-4. Sequential Processing - 
+4. Sequential Processing
 
 Process patterns one at a time.
 If any pattern has no valid expansion → return NO.
@@ -275,7 +275,7 @@ since $\ell \leq n$, $d \leq n$, $k \leq n$ → exponential, but allowed.
 
 **Heuristic Elements**
 
-Prefix pruning: 
+Prefix pruning:
 - s.find(current + choice) → eliminates impossible paths early.
 - First-solution early exit: stop after finding one valid expansion per pattern.
 - Process patterns sequentially: fail fast on first unsatisfiable pattern.
@@ -289,33 +289,41 @@ Analyze the worst-case running time of the algorithm with respect to the general
 Worst-Case Running Time (General Input)
 Let:
 
-$|s| = n_s$
-$\sum_i |t_i| = n_t$
-$\sum_j |R_j| = n_R$
-$n = n_s + n_t + n_R$ = total input size
-$\ell_i =$ number of tokens in $t_i$
-$d = \max_j |R_j|$
+$s \in \Sigma^*$: target string, $n_s = |s|$
 
-For pattern $i$, backtracking explores up to:
+$k$: number of patterns $t_1, \dots, t_k$
 
-$$
-\prod_{j \text{ with } \gamma} |R_\gamma| \leq d^{\ell_i} \leq d^n
-$$
+$t_i \in (\Sigma \cup \Gamma)^*$: $\newline$
+each pattern, let $ n_t = \sum_{i=1}^k |t_i|$
 
-Each node: $O(n_s)$ time for find().
+$\Gamma = \{\gamma_1, \dots, \gamma_m\}$, $R_j \subseteq \Sigma^*$:$\newline$
+finite expansion sets
+
+$n_R = \sum_{j=1}^m |R_j|$:$\newline$ total number of expansion strings
+
+Total input size:
+$$n = n_s + n_t + n_R$$
+
+For pattern $t_i$:
+
+Split into tokens:<br/>
+consecutive lowercase letters → one token;<br>uppercase → one token.$\newline$
+
+Let $\ell_i$ = number of tokens in $t_i$
+
+Let:
+
+$d = \max_j |R_j|$ = maximum expansion set size<br>
+
+Then number of possible expansions of $t_i$:
+$$\prod_{\text{variable tokens}} |R_\gamma| \leq d^{\ell_i} \leq d^n$$
+
+Each node: $O(n_s)$ time for find().<br>
 Total per pattern: $O(d^n \cdot n_s)$
 Over $k \leq n$ patterns:
-
-$$
-T(n) = O(k \cdot d^n \cdot n_s) = O(n \cdot d^n \cdot n) = O(n^2 \cdot d^n)
-$$
-
+$$T(n) = O(k \cdot d^n \cdot n_s) = O(n \cdot d^n \cdot n) = O(n^2 \cdot d^n)$$
 Since $d \geq 2$ possible,
-
-$$
-T(n) \in O(2^{p(n)})\ \text{for some polynomial } p
-$$
-
+$$T(n) \in O(2^{p(n)})\ \text{for some polynomial } p$$
 Conclusion: Exponential in input size, as required.
 
 ### i) Implementation **Kevin** and **Pinac**
