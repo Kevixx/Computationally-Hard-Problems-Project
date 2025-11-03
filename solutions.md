@@ -64,11 +64,11 @@ E:aa,bd,c,d,e
 
 ## Tasks
 
-### a) Problem Understanding
+### a) Problem Understanding - **Kevin**
 
 Read and understand the problem. You do not have to comment on this in the report.
 
-### b) Test Case Analysis
+### b) Test Case Analysis - **Bozhidar**
 
 Determine whether the answer for `test01.SWE` is YES or NO and justify your solution.
 
@@ -101,7 +101,7 @@ Analyze the expansions of each string $t_i$:
     - `a` + `b` + `d` = `abd`
     - `b` + `d` + `d` = `bdd`
 
-### c) Formal Language Description
+### c) Formal Language Description - **Bozhidar**
 
 Describe the formal language that we use in the .SWE file format to represent inputs to `SuperStringWithExpansion` and describe how to solve the word problem for a word over the underlying alphabet. Note that every formal language is defined over a single alphabet only.
 
@@ -128,7 +128,7 @@ Where:
 - $l_3,...,l_{k+2}$ are the following $k$ lines containing the strings $t_1,...,t_k$
 - $l_{k+3},...,l_m$ are the last lines starting with a letter $\gamma_j \in \Gamma$ followed by a colon and the contents of the set $R_j$ belonging to the letter, where the elements of the set are separated by commas. The last lines should be at most 26 lines, thus $m - (k-3) \leq 26$.
 
-### d) Decision to Optimization Algorithm Conversion
+### d) Decision to Optimization Algorithm Conversion - **Pinac**
 
 1. First we call the decision algorithm $A_d$ using the given inputs. If $A_d$ returns NO, then return $A_o$ outputs NO.
 2. If the output is YES, initialize an empty list for, that we append the solution to. Process the $\gamma_j$ in order from $j = 1$ to $m$. (First For Loop)
@@ -155,7 +155,7 @@ Note: Since the current instance is a YES instance at the start, there exists at
 Correctness: If the original input is a NO, $A_o$ correctly outputs NO, as seen on the 1st step. If YES, each fixation preserves the YES property, as we only choose $r$ where the reduced instance remains YES. At the end, with no $\gamma$ left, the fully expanded $t_i$ are substrings of $s$, so the sequence remains a valid solution.
 Running time: Let $n$ be the input size (total bits to describe $s$, all $t_i$, and all $R_j$). The number of $A_d$ calls is at most $\sum_{j=1}^m |R_j|$, which is $O(n)$ since each element in each $R_j$ contributes $\Omega(1)$ to $n$. For each call, building the reduced instance takes time $O(n)$ in the best case, but up to $O(n^2)$ in the worst case (scanning and replacing in $t_i$, where new lengths are $O(n)$ ). Over all calls, total time is $O(n^2)$ excluding $A_d$ calls, which is polynomial. With each $A_d$ call counting as 1 step, $A_o$ runs in polynomial time.
 
-### e) NP Membership
+### e) NP Membership - **Pinac**
 
 As mentioned in the question, the problem is a decision problem. Let R be interpreted from Random Bits. We define the certificate $R$. as a sequence of choices for $r_1 \in R_1, \dots, r_m \in R_m$. Since each $R_j$ is finite and listed in the input, we can encode the choice of each $r_j$ by an index into $R_j$ (requiring $O(\log |R_j|)$ bits per $j$). As $|R_j| \leq n$ (bounded by input size) and $m \leq n$, the total length of $R$ is $O(m \log n) = O(n \log n)$, which is polynomial in $n$.
 
@@ -170,8 +170,8 @@ The algorithm $A(X, R)$ is as follows (deterministic verifier, where $R$ is rand
 If $X$ is a YES-instance, there exists at least one sequence $r_1, \dots, r_m$ such that all $e(t_i)$ are substrings of $s$. The corresponding $R$ (encoding those choices) makes $A(X, R) =$ YES, so $\Pr[A(X, R) = \text{YES}] > 0$ at least one good $R$ out of $2^{O(n \log n)}$.
 If $X$ is a NO-instance, no such sequence exists, so for all $R$, $A(X, R) =$ NO, hence $\Pr[A(X, R) = \text{NO}] = 1$.
 
-### f) NP-Completeness
->
+### f) NP-Completeness - **Bozhidar**
+
 > Show that `SuperStringWithExpansion (SWE)` is NP-complete. As reference problem you have to select a problem from the list of NP-complete problems given below. Note that there may be many different approaches to prove NP-completeness.
 
 To show that `SWE` is NP-complete, two conditions must be satisfied:
@@ -180,6 +180,13 @@ To show that `SWE` is NP-complete, two conditions must be satisfied:
 2. Prove that a NP-complete problem $P_c$ can be transformed through reduction to `SWE` in polynomial time  $P_c \leq_p P$.
 
 For the proof we choose `1-In-3-SATISFIABILITY (1-In-3-SAT)` because of its similarity to `SWE`.
+
+#### Problem: [1-In-3-Satisfiability]
+
+**Input:** A set of clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $x_1,...,x_n$, where every clause contains exactly three literals.
+
+**Output:** YES if there is a satisfying assignment such that every clause has exactly one true literal, i.e., if there is an assignment $a: \lbrace x_1,...,x_n \rbrace \to \lbrace 0,1  \rbrace$ such that every clause $c_j$ is satisfied and no clause has two or three satisfied literals, and NO otherwise.
+
 
 ### Construction
 
@@ -227,7 +234,7 @@ Complexity. The construction uses $O(n+k)$ symbols/templates and runs in polynom
 
 ---
 
-### g) Algorithm Design
+### g) Algorithm Design **Kevin**
 
 Design an algorithm which receives an input to `SuperStringWithExpansion` in the general format given above (not restricted to .SWE format) and always gives the correct answer, i.e., which always stops and determines whether the input instance is a YES or NO instance. The algorithm is allowed to have exponential worst-case running time (i.e. bounded by $2^{p(n)}$, where $n$ is the size of the input and $p$ some polynomial), but should contain some heuristic elements that allow for faster execution on certain types of instances. For example, a heuristic may be used to quickly identify cases where the answer must be NO. Describe in natural language how the algorithm works, prove its correctness and running time, and explain the heuristic elements.
 
@@ -253,7 +260,7 @@ Remaining lines: for each $\gamma_j \in \Gamma$, line $\gamma_j : r_{j1}, r_{j2}
 
 Tokenization rule: Consecutive lowercase letters form a single token (e.g., dd → one token).
 
-2. Preprocessing
+1. Preprocessing
 For each pattern $t_i$:
 
 Split into tokens: lowercase sequences and uppercase letters are separate.
@@ -264,6 +271,7 @@ If token is $\gamma \in \Gamma$, then $\text{options}[i][j] = R_\gamma$.
 If unknown → empty list → immediate NO.
 
 Let $P_i$ = number of tokens in pattern $i$, $|R_\gamma|$ = size of expansion set.
+
 3. Backtracking Search (per pattern)
 For each pattern $t_i$, solve:
 
@@ -293,7 +301,7 @@ At each step, after appending a choice, check if the prefix so far appears anywh
 If not → prune entire branch → avoids expanding impossible paths.
 This is sound (no valid solution missed) and effective when $s$ is short or patterns grow quickly.
 
-4. Sequential Processing
+4. Sequential Processing - 
 
 Process patterns one at a time.
 If any pattern has no valid expansion → return NO.
@@ -340,7 +348,7 @@ Prefix pruning:
 
 These make the algorithm fast in practice on small/structured instances (e.g., test01.SWE), despite worst-case exponential.
 
-### h) Runtime Analysis
+### h) Runtime Analysis - **Kevin**
 
 Analyze the worst-case running time of the algorithm with respect to the general input format.
 
@@ -376,33 +384,13 @@ $$
 
 Conclusion: Exponential in input size, as required.
 
-### i) Implementation
+### i) Implementation **Kevin** and **Pinac**
 
 Implement the algorithm you developed in Part g). It has to be able to read inputs in .SWE format from standard input (not as a command line argument) and, as described in g), it must always solve the corresponding problem correctly by outputting a solution (or NO if no solution is possible) to standard output. It is important to use only standard input and standard output for communication, i.e., the program must not require additional command-line arguments or user interaction to read from a file etc. Failing to do so will reduce your score.
 
 We expect you to test your code on the instances published on DTU Learn as well as on other instances. If your code does not solve all tests test01.SWE–test06.SWE on DTU Learn, you should try to improve it. The teachers will take into account the total number of solved test instances (not necessarily limited to the ones on Learn) for the final score you receive for this whole assignment.
 
 Implemented code can be found in path `/code-group-17/code-group-17.py`
-
----
-
-## Submission Requirements
-
-You have to submit exactly three files to the corresponding assignment on DTU Learn. Replace XX with your group number:
-
-- **`report-group-17.pdf`**: A PDF file with your solutions to the theoretical (non-programming) parts of this project
-- **`code-group-17.zip`**: The full source code of your implementation as a ZIP file; the top level of the zip file should contain the root of the project, i.e. not a single directory that contains the root of the project (hint: zip the files/directories in the root of the project, not the directory containing the whole project)
-- **`readme-group-17.txt`**: An instruction how to compile and run your implementation as a text file
-
-> **Important:** Do not duplicate files, in particular, do not include the report and readme file in the zip archive.
-
-### Accepted programming languages
-
-Java, C, C++ and Python. If you prefer other languages, you have to contact the teachers. Note that the latest version submitted before the deadline will be evaluated. We reserve the right to deduce points if you do not comply with the above guidelines, including conventions for file types, file structures and names, which are case sensitive.
-
-### Grading weights
-
-The three blocks **[b)–f)]**, **[g),h)]**, and **[i)]** have approximately weights of **50%**, **25%**, and **25%**, respectively, in the grading. Please state in your report the division of labor, i.e., describe the contributions of the individual group members.
 
 ---
 
@@ -413,65 +401,3 @@ The three blocks **[b)–f)]**, **[g),h)]**, and **[i)]** have approximately wei
 **Input:** A sequence $X = (x_1,x_2,...,x_{3n})$ of $3n$ natural numbers, and a natural number $B$, such that $(B/4) < x_i < (B/2)$ for all $i \in \lbrace 1,2,...,3n  \rbrace$ and $\sum_{i=1}^{3n} x_i = nB$.
 
 **Output:** YES if $X$ can be partitioned into $n$ disjoint sets $X_1,X_2,...,X_n$ such that for all $j \in \lbrace 1,2,...,n  \rbrace$ one has $\sum_{x \in X_j} x = B$.
-
----
-
-### Problem: [1-In-3-Satisfiability]
-
-**Input:** A set of clauses $C = \lbrace c_1,...,c_k  \rbrace$ over $n$ boolean variables $x_1,...,x_n$, where every clause contains exactly three literals.
-
-**Output:** YES if there is a satisfying assignment such that every clause has exactly one true literal, i.e., if there is an assignment $a: \lbrace x_1,...,x_n \rbrace \to \lbrace 0,1  \rbrace$ such that every clause $c_j$ is satisfied and no clause has two or three satisfied literals, and NO otherwise.
-
----
-
-### Problem: [MinimumCliqueCover]
-
-**Input:** An undirected graph $G = (V,E)$ and a natural number $k$.
-
-**Output:** YES if there is clique cover for $G$ of size at most $k$. That is, a collection $V_1,V_2,...,V_k$ of not necessarily disjoint subsets of $V$, such that each $V_i$ induces a complete subgraph of $G$ and such that for each edge $\lbrace u,v \rbrace \in E$ there is some $V_i$ that contains both $u$ and $v$. NO otherwise.
-
----
-
-### Problem: [Graph-3-Coloring]
-
-**Input:** An undirected graph $G = (V,E)$.
-
-**Output:** YES if there is a 3-coloring of $G$ and NO otherwise. A 3-coloring assigns every vertex one of 3 colors such that adjacent vertices have different colors.
-
----
-
-### Problem: [Longest-Common-Subsequence]
-
-**Input:** A sequence $w_1,w_2,...,w_n$ of strings over an alphabet $\Sigma$ and a natural number $B$.
-
-**Output:** YES if there is a string $x$ over $\Sigma$ of length $B$ which is a subsequence of all $w_i$. The answer is NO otherwise.
-
-**Formal definition:** We say that $x = x_1x_2 \cdots x_{\ell_x}$ is a subsequence of $w = w_1w_2 \cdots w_{\ell_w}$ if there is a strictly increasing sequence of indices $i_j$, $1 \leq j \leq \ell_x$, such that for all $j = 1,2,...,\ell_x$ we have $x_j = w_{i_j}$.
-
----
-
-### Problem: [MinimumRectangleTiling]
-
-**Input:** An $n \times n$ array $A$ of non-negative numbers, positive integers $k$ and $B$.
-
-**Output:** YES if there is a partition of $A$ into $k$ non-overlapping rectangular sub-arrays such that the sum of the entries every sub-array is at most $B$. NO otherwise.
-
----
-
-### Problem: [Minimum Graph Transformation]
-
-**Input:** Undirected graphs $G_1 = (V_1,E_1)$, $G_2 = (V_2,E_2)$ and an integer $k > 0$.
-
-**Output:** YES if there is a transformation of order $k$ that makes $G_1$ isomorphic to $G_2$, and NO otherwise. A transformation of order $k$ removes $k$ existing edges from $E_1$ and then adds $k$ new edges to $E_1$.
-
----
-
-### Problem: [MinimumDegreeSpanningTree]
-
-**Input:** A graph $G = (V,E)$ and an integer $k$.
-
-**Output:** YES if there is a spanning tree $T$ in which every node has degree at most $k$; NO otherwise.
-
----
-
-**End of Exercise Project 1**
