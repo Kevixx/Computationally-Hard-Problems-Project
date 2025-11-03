@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 import sys
 
@@ -142,32 +141,32 @@ def log_expansion_assignments(options_list, patterns, target_string) -> str:
 
 
 if __name__ == "__main__":
-    # Only accept .swe files as input
-    parser = argparse.ArgumentParser(description="Read a .swe file from the terminal.")
-    
-    def swe_file_path(path_str: str) -> Path:
+    def swe_file_path(path_str: str) -> Path: # Returns the path
+        # Validate and return a .swe file path.
         p = Path(path_str)
-        
+
         if p.suffix.lower() != ".swe":
-            raise argparse.ArgumentTypeError(f"'{path_str}' does not end with .swe")
-        
+            raise ValueError(f"'{path_str}' does not end with .swe") # Raise ValueError if NOT .swe 
+
         if not p.exists() or not p.is_file():
-            raise argparse.ArgumentTypeError(f"File '{path_str}' does not exist or is not a file")
+            raise ValueError(f"File '{path_str}' does not exist or is not a file") # Raise ValueError if FILE does not exist
+
         return p
     
-    parser.add_argument("swe_file", type=swe_file_path, help="Path to an input file with .swe extension")
+    args = sys.argv[1:]  # Skips script name
 
-    # Try block to parse arguments and handle errors
+    if len(args) > 1: # Checks for too many input arguments
+        print("NO")
+        sys.exit()
+
     try:
-        args = parser.parse_args()
-        swe_path: Path = args.swe_file
-    
-    except argparse.ArgumentTypeError as e:
-        print(f"Argument error: {e}", file=sys.stderr)
-        sys.exit(2)
-    
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+        swe_path = swe_file_path(args[0])
+        main(swe_path)
 
-    main(swe_path)
+    except ValueError as e: # Due to the question constraints, we print NO on any error
+        print("NO")
+        sys.exit()
+
+    except Exception as e: # Due to the question constraints, we print NO on any error
+        print("NO")
+        sys.exit()
